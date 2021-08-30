@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+<form method="POST" action="{% url "temp" %}" />
+    <pre>block_id: {{ self.block.block_id }}</pre>
+
+    {% csrf_token %}
+    <input type="hidden" name="block_id" value="{{ self.block.block_id }}" />
+    {% for child in self.fields %}
+    {% include_block child %}
+    {% endfor %}
+    <input type="submit" />
+</form>
