@@ -1,7 +1,27 @@
-from django.conf import settings
-from wagtail.core import blocks
+from uuid import uuid4
 
-formblock_registry = {}
+from django import forms
+from wagtail.core import blocks
+from wagtail.core.telepath import register
+
+
+class IDBlock(blocks.CharBlock):
+    def clean(self, value):
+        result = super().clean(value)
+        if not result:
+            result = str(uuid4())
+        return result
+
+
+class IDBlockAdapter(blocks.field_block.FieldBlockAdapter):
+    def js_args(self, block):
+        result = super().js_args(block)
+        result[1] = forms.widgets.TextInput(attrs={'readonly': 'readonly'})
+        # result[1] = forms.widgets.HiddenInput()
+        return result
+
+
+register(IDBlockAdapter(), IDBlock)
 
 
 class FieldBlockMixin:
@@ -15,48 +35,16 @@ class TextFieldBlock(FieldBlockMixin, blocks.StructBlock):
         template = 'home/blocks/text_field.html'
 
 
-def register_formblock(cls):
-    block_id = hash(f'{settings.SECRET_KEY}:{cls.__module__}:{cls.__name__}')
-    cls.block_id = block_id
-    formblock_registry[block_id] = cls
-    return cls
-
-
 class BaseFormBlock(blocks.StructBlock):
     fields = blocks.StreamBlock([
     ])
 
-    @classmethod
-    def _get_fieldblocks_recursive(cls, block, results):
-        if getattr(block, 'is_field_block', False):
-            results.append(block)
-            return
-
-        if hasattr(block, 'child_block'):
-            child_blocks = [block.child_block]
-        elif hasattr(block, 'child_blocks'):
-            child_blocks = [value for key, value in block.child_blocks.items()]
-        else:
-            return
-
-        for child_block in child_blocks:
-            cls._get_fieldblocks_recursive(child_block, results)
-
-    @classmethod
-    def _get_fieldblocks(cls):
-        results = []
-        cls._get_fieldblocks_recursive(cls.base_blocks['fields'], results)
-        return results
-
-    @classmethod
     def get_form_class(cls):
-        results = cls._get_fieldblocks()
-        print(results)
-        import ipdb; ipdb.set_trace() 
+        pass
 
 
-@register_formblock
 class FormBlock(BaseFormBlock):
+    block_id = IDBlock(required=False, label='--')
     fields = blocks.StreamBlock([
         ('text', TextFieldBlock()),
         ('container', blocks.ListBlock(TextFieldBlock()))

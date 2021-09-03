@@ -8,7 +8,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
-from home.views import ProcessFormBlockView
+from home.views import TestView
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -17,7 +17,7 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
 
     path('search/', search_views.search, name='search'),
-    path('temp/', ProcessFormBlockView.as_view(), name='temp'),
+    path('temp/', TestView.as_view(), name='temp'),
 
 ]
 

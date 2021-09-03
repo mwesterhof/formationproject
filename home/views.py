@@ -1,14 +1,13 @@
-from django.views.generic import FormView
-
-from home.blocks import formblock_registry
+from django.views.generic import FormView, View
 
 
 class ProcessFormBlockView(FormView):
-    def get_block(self):
-        return formblock_registry[int(self.request.POST.get('block_id'))]
+    pass
 
-    def get_form_class(self):
-        return self.get_block().get_form_class()
+
+class TestView(View):
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
 
 
 '''
