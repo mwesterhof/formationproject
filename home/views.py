@@ -1,5 +1,7 @@
 from django.views.generic import FormView, View
 
+from home.utils import token_processor
+
 
 class ProcessFormBlockView(FormView):
     pass
@@ -7,7 +9,9 @@ class ProcessFormBlockView(FormView):
 
 class TestView(View):
     def post(self, request, *args, **kwargs):
-        print(request.POST)
+        form_token = request.POST['form_token']
+        page_id, block_id = token_processor.unpack_token(form_token)
+        print(page_id, block_id)
 
 
 '''
