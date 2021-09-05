@@ -1,6 +1,6 @@
 {% load wagtailcore_tags formation_tags %}
 
-<form method="POST" action="{% url "temp" %}" />
+<form style="border:1px solid black" method="POST" action="{% url "temp" %}" />
     {% csrf_token %}
     {% page_token page.pk self.block_id %}
 

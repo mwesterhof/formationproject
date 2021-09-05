@@ -1,9 +1,13 @@
 # TODO: investigate if it makes sense to just generate random key and iv
 # this would invalidate a token open restart
 from base64 import b64encode, b64decode
+from collections.abc import Iterable
 import os
 
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from wagtail.core.blocks import ListBlock, StreamBlock
+from wagtail.core.fields import StreamField
+from wagtail.core.models import Page
 
 
 class TokenProcessor:
@@ -30,3 +34,28 @@ class TokenProcessor:
 
 
 token_processor = TokenProcessor()
+
+
+def _extract_formblocks_recursive(container, form_blocks):
+    from home.blocks import FormBlock
+    for element in container:
+        if isinstance(element.block, FormBlock):
+            element = getattr(element, 'value', element)
+            form_blocks[element['block_id']] = element
+        elif isinstance(element.block, ListBlock) or isinstance(element.block, StreamBlock):
+            _extract_formblocks_recursive(element.value, form_blocks)
+
+
+def find_block(page_id, block_id):
+    page = Page.objects.get(pk=page_id).specific
+    fields = [
+        getattr(page, field.name)
+        for field in page._meta.fields
+        if isinstance(field, StreamField)
+    ]
+    form_blocks = {}
+
+    for field in fields:
+        _extract_formblocks_recursive(field, form_blocks)
+
+    return form_blocks[block_id]

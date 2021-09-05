@@ -53,5 +53,8 @@ class FormBlock(BaseFormBlock):
     def form_valid(self, form):
         pass
 
+    def get_form(self):
+        pass
+
     class Meta:
         template = 'home/blocks/form.html'

@@ -1,6 +1,6 @@
 from django.views.generic import FormView, View
 
-from home.utils import token_processor
+from home.utils import find_block, token_processor
 
 
 class ProcessFormBlockView(FormView):
@@ -11,7 +11,8 @@ class TestView(View):
     def post(self, request, *args, **kwargs):
         form_token = request.POST['form_token']
         page_id, block_id = token_processor.unpack_token(form_token)
-        print(page_id, block_id)
+        block = find_block(page_id, block_id)
+        print(block)
 
 
 '''
