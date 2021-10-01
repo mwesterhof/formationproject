@@ -4,6 +4,8 @@ from django import forms
 from wagtail.core import blocks
 from wagtail.core.telepath import register
 
+from home.utils import extract_elements_recursive
+
 
 class IDBlock(blocks.CharBlock):
     def clean(self, value):
@@ -31,6 +33,9 @@ class FieldBlockMixin:
 class TextFieldBlock(FieldBlockMixin, blocks.StructBlock):
     label = blocks.CharBlock()
 
+    def get_field(cls, value):
+        return value['label'], forms.CharField(label=value['label'])
+
     class Meta:
         template = 'home/blocks/text_field.html'
 
@@ -43,14 +48,24 @@ class BaseFormBlock(blocks.StructBlock):
         return getattr(cls, 'form_class_name', 'BlockForm')
 
     def get_form_class(cls, value):
-        import ipdb; ipdb.set_trace() 
+        fields = value['fields']
+        blocks = []
+
+        def _input_block_check(element):
+            print(repr(element))
+            return getattr(element.block, 'is_field_block', False)
+
+        extract_elements_recursive(fields, blocks, _input_block_check, False)
+
         return type(
             cls.get_form_class_name(),
             (forms.Form,),
-            {
-                'foo': forms.CharField(),  # TODO: fix placeholders
-                'bar': forms.CharField(),
-            }
+            dict(
+                [
+                    element.block.get_field(element)
+                    for element in blocks
+                ]
+            )
         )
 
     def get_form_instance(cls, value, data):

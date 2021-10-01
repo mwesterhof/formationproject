@@ -36,14 +36,16 @@ class TokenProcessor:
 token_processor = TokenProcessor()
 
 
-def _extract_formblocks_recursive(container, form_blocks):
-    from home.blocks import FormBlock
+def extract_elements_recursive(container, results, check_method, id_based=False):
     for element in container:
-        if isinstance(element.block, FormBlock):
+        if check_method(element):
             element = getattr(element, 'value', element)
-            form_blocks[element['block_id']] = element
+            if id_based:
+                results[element['block_id']] = element
+            else:
+                results.append(element)
         elif isinstance(element.block, ListBlock) or isinstance(element.block, StreamBlock):
-            _extract_formblocks_recursive(element.value, form_blocks)
+            extract_elements_recursive(element.value, results, check_method, id_based)
 
 
 def find_block_value(page_id, block_id):
@@ -55,7 +57,11 @@ def find_block_value(page_id, block_id):
     ]
     form_blocks = {}
 
+    def _formblock_check(element):
+        from home.blocks import FormBlock
+        return isinstance(element.block, FormBlock)
+
     for field in fields:
-        _extract_formblocks_recursive(field, form_blocks)
+        extract_elements_recursive(field, form_blocks, _formblock_check, True)
 
     return form_blocks[block_id]

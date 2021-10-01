@@ -13,6 +13,7 @@ class TestView(View):
         page_id, block_id = token_processor.unpack_token(form_token)
         block_value = find_block_value(page_id, block_id)
         form = block_value.block.get_form_instance(block_value, request.POST)
+        import ipdb; ipdb.set_trace() 
 
 
 '''
