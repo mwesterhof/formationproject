@@ -39,11 +39,27 @@ class BaseFormBlock(blocks.StructBlock):
     fields = blocks.StreamBlock([
     ])
 
-    def get_form_class(cls):
-        pass
+    def get_form_class_name(cls):
+        return getattr(cls, 'form_class_name', 'BlockForm')
+
+    def get_form_class(cls, value):
+        import ipdb; ipdb.set_trace() 
+        return type(
+            cls.get_form_class_name(),
+            (forms.Form,),
+            {
+                'foo': forms.CharField(),  # TODO: fix placeholders
+                'bar': forms.CharField(),
+            }
+        )
+
+    def get_form_instance(cls, value, data):
+        form_class = cls.get_form_class(value)
+        return form_class(data)
 
 
 class FormBlock(BaseFormBlock):
+    form_class_name = 'TestForm'
     block_id = IDBlock(required=False, label='--')
     fields = blocks.StreamBlock([
         ('text', TextFieldBlock()),

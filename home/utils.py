@@ -46,7 +46,7 @@ def _extract_formblocks_recursive(container, form_blocks):
             _extract_formblocks_recursive(element.value, form_blocks)
 
 
-def find_block(page_id, block_id):
+def find_block_value(page_id, block_id):
     page = Page.objects.get(pk=page_id).specific
     fields = [
         getattr(page, field.name)
