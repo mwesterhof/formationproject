@@ -12,3 +12,38 @@
 {% endfor %}
 
 {% endblock content %}
+
+{% block extra_js %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    alert("kut");
+    function asyncForm(frm) {
+     //anything you wanna do before you post
+    alert("kut");
+
+     $.post(
+            url,
+            $('#' + frm).serialize(),
+            function (data) {
+                result = data;
+            }
+          )
+          .success(function() {
+            //add your success proccesses
+            console.log("success");
+          })
+          .complete(function() { 
+            console.log("complete");
+
+          })
+          .error(function() {
+               alert('An error has occurred.');
+          });      
+
+     return false;// this stops the form from actually posting
+ }
+});
+
+</script>
+{% endblock %}

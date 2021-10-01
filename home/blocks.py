@@ -36,11 +36,18 @@ class TextFieldBlock(FieldBlockMixin, blocks.StructBlock):
     def get_field(cls, value):
         return value['label'], forms.CharField(label=value['label'])
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['errors'] = context['form'].errors.get(value['label'])
+        return context
+
     class Meta:
         template = 'home/blocks/text_field.html'
 
 
 class BaseFormBlock(blocks.StructBlock):
+    block_id = IDBlock(required=False, label='--')
+
     fields = blocks.StreamBlock([
     ])
 
@@ -68,23 +75,25 @@ class BaseFormBlock(blocks.StructBlock):
             )
         )
 
-    def get_form_instance(cls, value, data):
+    def get_form_instance(cls, value, data=None):
         form_class = cls.get_form_class(value)
         return form_class(data)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        form_data = context.get('form_data', None)
+        context['form'] = self.get_form_instance(value, form_data)
+        return context
 
 
 class FormBlock(BaseFormBlock):
     form_class_name = 'TestForm'
-    block_id = IDBlock(required=False, label='--')
     fields = blocks.StreamBlock([
         ('text', TextFieldBlock()),
         ('container', blocks.ListBlock(TextFieldBlock()))
     ])
 
     def form_valid(self, form):
-        pass
-
-    def get_form(self):
         pass
 
     class Meta:

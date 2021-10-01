@@ -1,6 +1,9 @@
 {% load wagtailcore_tags formation_tags %}
 
-<form style="border:1px solid black" method="POST" action="{% url "temp" %}" />
+{% if form_success %}
+<h2>your post was successfull</h2>
+{% else %}
+<form style="border:1px solid black" id="form_{{ self.block_id }}" method="POST" action="{% url "temp" %}" onSubmit="return asyncForm('');"/>
     {% csrf_token %}
     {% page_token page.pk self.block_id %}
 
@@ -9,3 +12,4 @@
     {% endfor %}
     <input type="submit" />
 </form>
+{% endif %}
