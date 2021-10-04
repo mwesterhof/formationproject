@@ -3,13 +3,15 @@
 {% if form_success %}
 <h2>your post was successfull</h2>
 {% else %}
-<form style="border:1px solid black" id="form_{{ self.block_id }}" method="POST" action="{% url "temp" %}" onSubmit="return asyncForm('');"/>
+<form class="ajaxForm" style="border:1px solid black" method="POST" action="{% url "temp" %}">
     {% csrf_token %}
     {% page_token page.pk self.block_id %}
 
-    {% for child in self.fields %}
-    {% include_block child %}
-    {% endfor %}
+    <div class="fields">
+        {% for child in self.fields %}
+        {% include_block child %}
+        {% endfor %}
+    </div>
     <input type="submit" />
 </form>
 {% endif %}

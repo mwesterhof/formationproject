@@ -14,36 +14,25 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script>
-$(document).ready(function () {
-    alert("kut");
-    function asyncForm(frm) {
-     //anything you wanna do before you post
-    alert("kut");
+    $(document).ready(function(){
+        $(".ajaxForm").submit(function(event) {
+            var form = $(this);
+            var url = form.attr('action');
 
-     $.post(
-            url,
-            $('#' + frm).serialize(),
-            function (data) {
-                result = data;
-            }
-          )
-          .success(function() {
-            //add your success proccesses
-            console.log("success");
-          })
-          .complete(function() { 
-            console.log("complete");
+            event.preventDefault();
 
-          })
-          .error(function() {
-               alert('An error has occurred.');
-          });      
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                success: function(data) {
+                    form.replaceWith(data);
+                }
+            });
 
-     return false;// this stops the form from actually posting
- }
-});
-
+        });
+    });
 </script>
 {% endblock %}
