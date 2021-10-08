@@ -50,6 +50,11 @@ class BaseFormBlock(blocks.StructBlock):
     fields = blocks.StreamBlock([
     ])
 
+    required_fields = {}
+
+    def clean(self, value):
+        raise 1 / 0  # ShitINeedToFixError
+
     def get_form_class_name(cls):
         return getattr(cls, 'form_class_name', 'BlockForm')
 
@@ -89,6 +94,9 @@ class BaseFormBlock(blocks.StructBlock):
     def form_invalid(self, value, form):
         return
 
+    class Meta:
+        template = 'formation/blocks/base_form.html'
+
 
 class ExampleFormBlock(BaseFormBlock):
     form_class_name = 'TestForm'
@@ -102,6 +110,3 @@ class ExampleFormBlock(BaseFormBlock):
         print(value)
         print('form data:')
         print(form.cleaned_data)
-
-    class Meta:
-        template = 'formation/blocks/example_form.html'
