@@ -4,7 +4,6 @@
 <h2>your post was successfull</h2>
 {% else %}
 <form class="ajaxForm" style="border:1px solid black" method="POST" action="{% url "temp" %}">
-    {% csrf_token %}
     {% page_token page.pk self.block_id %}
 
     <div class="fields">

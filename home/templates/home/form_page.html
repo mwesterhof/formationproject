@@ -15,9 +15,11 @@
 
 {% block extra_js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <script>
     $(document).ready(function(){
         $(".ajaxForm").submit(function(event) {
+            const csrftoken = Cookies.get('csrftoken');
             var form = $(this);
             var url = form.attr('action');
 
@@ -27,6 +29,7 @@
                 type: "POST",
                 url: url,
                 data: form.serialize(),
+                headers: {'X-CSRFToken': csrftoken},
                 success: function(data) {
                     form.replaceWith(data);
                 }

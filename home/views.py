@@ -14,14 +14,9 @@ class TestView(View):
         page_id, block_id = token_processor.unpack_token(form_token)
         block_value = find_block_value(page_id, block_id)
         form = block_value.block.get_form_instance(block_value, request.POST)
-        if form.is_valid():
-            block_value.block.is_valid()
-            form_success = True
-        else:
-            form_success = False
 
         result = block_value.render_as_block({
-            'form_success': form_success,
+            'form_success': form.is_valid(),
             'form_data': request.POST
         })
         return HttpResponse(result)
