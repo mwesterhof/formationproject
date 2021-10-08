@@ -58,8 +58,8 @@ def find_block_value(page_id, block_id):
     form_blocks = {}
 
     def _formblock_check(element):
-        from home.blocks import FormBlock
-        return isinstance(element.block, FormBlock)
+        from formation.blocks import BaseFormBlock
+        return isinstance(element.block, BaseFormBlock)
 
     for field in fields:
         extract_elements_recursive(field, form_blocks, _formblock_check, True)

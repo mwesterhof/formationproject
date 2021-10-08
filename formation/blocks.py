@@ -1,10 +1,9 @@
 from uuid import uuid4
-
 from django import forms
-from wagtail.core import blocks
 from wagtail.core.telepath import register
+from wagtail.core import blocks
 
-from home.utils import extract_elements_recursive
+from .utils import extract_elements_recursive
 
 
 class IDBlock(blocks.CharBlock):
@@ -42,7 +41,7 @@ class TextFieldBlock(FieldBlockMixin, blocks.StructBlock):
         return context
 
     class Meta:
-        template = 'home/blocks/text_field.html'
+        template = 'formation/blocks/text_field.html'
 
 
 class BaseFormBlock(blocks.StructBlock):
@@ -91,7 +90,7 @@ class BaseFormBlock(blocks.StructBlock):
         return
 
 
-class FormBlock(BaseFormBlock):
+class ExampleFormBlock(BaseFormBlock):
     form_class_name = 'TestForm'
     fields = blocks.StreamBlock([
         ('text', TextFieldBlock()),
@@ -105,4 +104,4 @@ class FormBlock(BaseFormBlock):
         print(form.cleaned_data)
 
     class Meta:
-        template = 'home/blocks/form.html'
+        template = 'formation/blocks/example_form.html'

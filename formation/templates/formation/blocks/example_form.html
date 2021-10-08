@@ -3,7 +3,7 @@
 {% if form_success %}
 <h2>your post was successfull</h2>
 {% else %}
-<form class="ajaxForm" style="border:1px solid black" method="POST" action="{% url "temp" %}">
+<form class="ajaxForm" style="border:1px solid black" method="POST" action="{% url "process-block-form" %}">
     {% page_token page.pk self.block_id %}
 
     <div class="fields">

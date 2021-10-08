@@ -1,7 +1,7 @@
 from django.template import Library
 from django.utils.html import mark_safe
 
-from home.utils import token_processor
+from formation.utils import token_processor
 
 register = Library()
 

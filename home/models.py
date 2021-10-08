@@ -3,14 +3,10 @@ from wagtail.core import blocks
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 
-from .blocks import FormBlock
+from formation.blocks import ExampleFormBlock as FormBlock
 
 
 class HomePage(Page):
-    pass
-
-
-class FormPage(Page):
     content = StreamField([
         ('generic_list', blocks.ListBlock(FormBlock())),
         ('stream', blocks.StreamBlock([
