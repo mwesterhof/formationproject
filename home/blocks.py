@@ -59,7 +59,6 @@ class BaseFormBlock(blocks.StructBlock):
         blocks = []
 
         def _input_block_check(element):
-            print(repr(element))
             return getattr(element.block, 'is_field_block', False)
 
         extract_elements_recursive(fields, blocks, _input_block_check, False)
@@ -100,7 +99,10 @@ class FormBlock(BaseFormBlock):
     ])
 
     def form_valid(self, value, form):
-        print('[FORM VALID!!!!!]')
+        print('value:')
+        print(value)
+        print('form data:')
+        print(form.cleaned_data)
 
     class Meta:
         template = 'home/blocks/form.html'
