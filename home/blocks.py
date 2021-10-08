@@ -85,6 +85,12 @@ class BaseFormBlock(blocks.StructBlock):
         context['form'] = self.get_form_instance(value, form_data)
         return context
 
+    def form_valid(self, value, form):
+        return
+
+    def form_invalid(self, value, form):
+        return
+
 
 class FormBlock(BaseFormBlock):
     form_class_name = 'TestForm'
@@ -93,8 +99,8 @@ class FormBlock(BaseFormBlock):
         ('container', blocks.ListBlock(TextFieldBlock()))
     ])
 
-    def form_valid(self, form):
-        pass
+    def form_valid(self, value, form):
+        print('[FORM VALID!!!!!]')
 
     class Meta:
         template = 'home/blocks/form.html'

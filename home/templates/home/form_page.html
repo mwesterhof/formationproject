@@ -18,7 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <script>
     $(document).ready(function(){
-        $(".ajaxForm").submit(function(event) {
+        function handleFormSubmit(event) {
             const csrftoken = Cookies.get('csrftoken');
             var form = $(this);
             var url = form.attr('action');
@@ -32,10 +32,12 @@
                 headers: {'X-CSRFToken': csrftoken},
                 success: function(data) {
                     form.replaceWith(data);
+                    $('.ajaxForm').bind('submit', handleFormSubmit);
                 }
             });
+        }
 
-        });
+        $('.ajaxForm').bind('submit', handleFormSubmit);
     });
 </script>
 {% endblock %}
